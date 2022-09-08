@@ -1,3 +1,5 @@
+const emailRegex = require('./emailRegex');
+
 function tokenGenerator() {
   const token = [];
   const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -6,5 +8,12 @@ function tokenGenerator() {
   }
   return token.join('');
 }
+const emailValidator = (email) => emailRegex.test(email);
 
-module.exports = { tokenGenerator };
+const passwordValidator = (password) => password.length >= 6;
+
+module.exports = { 
+  tokenGenerator, 
+  emailValidator,
+  passwordValidator,
+};
