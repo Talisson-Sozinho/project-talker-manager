@@ -12,6 +12,27 @@ async function getJsonObject() {
   }
 }
 
+async function addTalkerOnJson(talker) {
+  const talkerList = await getJsonObject();
+  if (!talkerList) return null;
+
+  const newTalker = {
+    ...talker,
+    id: talkerList[talkerList.length - 1].id + 1,
+    talk: {
+      ...talker.talk,
+    },
+  };
+  talkerList.push(newTalker);
+  try {
+    await fs.writeFile(jsonPath, JSON.stringify(talkerList));
+    return newTalker;
+  } catch (e) {
+    console.error(e);
+    return null;
+  }
+}
+
 async function getTalkerById(id) {
   const data = await getJsonObject();
   if (!data) return null;
@@ -21,4 +42,5 @@ async function getTalkerById(id) {
 module.exports = {
   getJsonObject,
   getTalkerById,
+  addTalkerOnJson,
 };

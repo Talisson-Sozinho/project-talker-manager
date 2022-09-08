@@ -1,5 +1,16 @@
 const express = require('express');
-const { getJsonObject, getTalkerById } = require('../utils/filesFuncAux');
+const { 
+  getJsonObject, 
+  getTalkerById, 
+  addTalkerOnJson, 
+} = require('../utils/filesFuncAux');
+const tokenMiddleware = require('../middleware/tokenValidate');
+const { 
+  nameValidate, 
+  ageValidate, 
+  talkValidate, 
+  talkKeysValidate, 
+} = require('../middleware/bodyValidate');
 
 const router = express.Router();
 
@@ -22,6 +33,15 @@ router.get('/:id', async (req, res) => {
   if (!talker) return res.sendStatus(500);
 
   return res.status(200).json(talker);
+});
+
+router.use(tokenMiddleware, nameValidate, ageValidate, talkValidate, talkKeysValidate);
+
+router.post('/', async (req, res) => {
+  const result = await addTalkerOnJson(req.body);
+  if (!result) return res.sendStatus(500);
+
+  return res.status(201).json(result);
 });
 
 module.exports = router;

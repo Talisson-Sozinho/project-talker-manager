@@ -8,6 +8,9 @@ function tokenGenerator() {
   }
   return token.join('');
 }
+
+const tokenValidator = (token) => token.length === 16;
+
 const emailValidator = (email) => emailRegex.test(email);
 
 const passwordValidator = (password) => password.length >= 6;
@@ -16,4 +19,5 @@ module.exports = {
   tokenGenerator, 
   emailValidator,
   passwordValidator,
+  tokenValidator,
 };
