@@ -12,6 +12,16 @@ async function getJsonObject() {
   }
 }
 
+async function saveData(talkerList) {
+  try {
+    await fs.writeFile(jsonPath, JSON.stringify(talkerList));
+    return true;
+  } catch (e) {
+    console.error(e);
+    return null;
+  }
+}
+
 async function addTalkerOnJson(talker) {
   const talkerList = await getJsonObject();
   if (!talkerList) return null;
@@ -24,13 +34,8 @@ async function addTalkerOnJson(talker) {
     },
   };
   talkerList.push(newTalker);
-  try {
-    await fs.writeFile(jsonPath, JSON.stringify(talkerList));
-    return newTalker;
-  } catch (e) {
-    console.error(e);
-    return null;
-  }
+  if (saveData(talkerList)) return newTalker;
+  return null;
 }
 
 async function getTalkerById(id) {
@@ -39,8 +44,29 @@ async function getTalkerById(id) {
   return data.find(({ id: currentTalkerId }) => currentTalkerId === Number(id));
 }
 
+async function editTalkerById(id, newInfoTalker) {
+  const data = await getJsonObject();
+  if (!data) return null;
+
+  const editedTalker = {
+    ...newInfoTalker,
+    id: +id,
+    talk: { ...newInfoTalker.talk },
+  };
+
+  const newTalkerList = data.map((currentTalker) => {
+    if (currentTalker.id === +id) {
+      return editedTalker;
+    }
+    return currentTalker;
+  });
+  await saveData(newTalkerList);
+  return editedTalker;
+}
+
 module.exports = {
   getJsonObject,
   getTalkerById,
   addTalkerOnJson,
+  editTalkerById,
 };

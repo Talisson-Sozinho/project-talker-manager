@@ -25,7 +25,7 @@ module.exports = (req, res, next) => {
 
   if (!dateValidate(watchedAt)) return res.status(400).json(WATCHED_FORMAT_ERROR);
 
-  if (!rate) return res.status(400).json(RATE_NOT_FOUND_MESSAGE);
+  if (rate === undefined) return res.status(400).json(RATE_NOT_FOUND_MESSAGE);
 
   if (rateRange(+rate)) return res.status(400).json(RATE_VALUE_ERROR);
 

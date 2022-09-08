@@ -3,6 +3,7 @@ const {
   getJsonObject, 
   getTalkerById, 
   addTalkerOnJson, 
+  editTalkerById, 
 } = require('../utils/filesFuncAux');
 const tokenMiddleware = require('../middleware/tokenValidate');
 const { 
@@ -42,6 +43,16 @@ router.post('/', async (req, res) => {
   if (!result) return res.sendStatus(500);
 
   return res.status(201).json(result);
+});
+
+router.put('/:id', async (req, res) => {
+  const { params: { id } } = req;
+  const { body } = req;
+  const result = await editTalkerById(id, body);
+
+  if (!result) return res.sendStatus(500);
+
+  res.status(200).json(result);
 });
 
 module.exports = router;
