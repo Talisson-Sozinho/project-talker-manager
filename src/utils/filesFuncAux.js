@@ -12,6 +12,13 @@ async function getJsonObject() {
   }
 }
 
+async function getTalkerById(id) {
+  const data = await getJsonObject();
+  if (!data) return null;
+  return data.find(({ id: currentTalkerId }) => currentTalkerId === Number(id));
+}
+
 module.exports = {
   getJsonObject,
+  getTalkerById,
 };
