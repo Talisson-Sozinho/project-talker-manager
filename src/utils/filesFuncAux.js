@@ -12,6 +12,13 @@ async function getJsonObject() {
   }
 }
 
+async function searchByName(name) {
+  const talkerList = await getJsonObject();
+  if (!talkerList) return null;
+  const talkerListFiltered = talkerList.filter(({ name: curName }) => curName.includes(name));
+  return talkerListFiltered;
+}
+
 async function saveData(talkerList) {
   try {
     await fs.writeFile(jsonPath, JSON.stringify(talkerList));
@@ -79,4 +86,5 @@ module.exports = {
   addTalkerOnJson,
   editTalkerById,
   deleteTalk,
+  searchByName,
 };

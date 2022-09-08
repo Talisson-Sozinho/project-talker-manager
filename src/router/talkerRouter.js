@@ -5,6 +5,7 @@ const {
   addTalkerOnJson, 
   editTalkerById,
   deleteTalk,
+  searchByName,
 } = require('../utils/filesFuncAux');
 const tokenMiddleware = require('../middleware/tokenValidate');
 const { 
@@ -24,13 +25,20 @@ router.get('/', async (_req, res) => {
   return res.status(200).json(talkerList);
 });
 
+router.get('/search', tokenMiddleware, async (req, res) => {
+  const { query: { q } } = req;
+  const result = await searchByName(q);
+  if (!result) return res.sendStatus(404);
+  return res.status(200).json(result);
+});
+
 router.get('/:id', async (req, res) => {
   const { id } = req.params;
   const talker = await getTalkerById(id);
   const NOT_FOUND_MESSAGE = {
     message: 'Pessoa palestrante não encontrada',
   };
-
+  console.log('passei aq');
   if (talker === undefined) return res.status(404).json(NOT_FOUND_MESSAGE);
   if (!talker) return res.sendStatus(500);
 
