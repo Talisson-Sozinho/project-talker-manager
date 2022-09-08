@@ -3,7 +3,8 @@ const {
   getJsonObject, 
   getTalkerById, 
   addTalkerOnJson, 
-  editTalkerById, 
+  editTalkerById,
+  deleteTalk,
 } = require('../utils/filesFuncAux');
 const tokenMiddleware = require('../middleware/tokenValidate');
 const { 
@@ -36,7 +37,16 @@ router.get('/:id', async (req, res) => {
   return res.status(200).json(talker);
 });
 
-router.use(tokenMiddleware, nameValidate, ageValidate, talkValidate, talkKeysValidate);
+router.use(tokenMiddleware);
+
+router.delete('/:id', async (req, res) => {
+  const { id } = req.params;
+  const result = await deleteTalk(id);
+  if (!result) return res.sendStatus(500);
+  return res.sendStatus(204);
+});
+
+router.use(nameValidate, ageValidate, talkValidate, talkKeysValidate);
 
 router.post('/', async (req, res) => {
   const result = await addTalkerOnJson(req.body);

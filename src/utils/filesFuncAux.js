@@ -34,8 +34,8 @@ async function addTalkerOnJson(talker) {
     },
   };
   talkerList.push(newTalker);
-  if (saveData(talkerList)) return newTalker;
-  return null;
+  if (!await saveData(talkerList)) return null;
+  return newTalker;
 }
 
 async function getTalkerById(id) {
@@ -60,8 +60,17 @@ async function editTalkerById(id, newInfoTalker) {
     }
     return currentTalker;
   });
-  await saveData(newTalkerList);
+  if (!await saveData(newTalkerList)) return null;
+
   return editedTalker;
+}
+
+async function deleteTalk(id) {
+  const data = await getJsonObject();
+  if (!data) return null;
+  const newTalkerList = data.filter(({ id: currentId }) => currentId !== +id);
+  if (!await saveData(newTalkerList)) return null;
+  return true;
 }
 
 module.exports = {
@@ -69,4 +78,5 @@ module.exports = {
   getTalkerById,
   addTalkerOnJson,
   editTalkerById,
+  deleteTalk,
 };
